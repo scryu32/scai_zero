@@ -1,21 +1,19 @@
 #날씨 가져오는 코드임
 #forecast()하면 사용됨
-#지금은 현재 날씨밖에 못가져오는데 나중에 내일날씨나 시간같은거 넣을수 있을듯
 
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import xmltodict
 import os
 
 keys = os.environ.get('WEATHER_KEY')
 
-def get_current_date():
-    current_date = datetime.now().date()
-    return current_date.strftime("%Y%m%d")
-
-def get_current_hour():
-    now = datetime.now()
-    return datetime.now().strftime("%H%M")
+#기본값 0, 0 1일전이면 -1, 2시간전이면 -2 알잘딱해서 넣자 리턴값은 튜플임
+def get_datetime(days=0, hours=0, minutes=0):
+    adjusted_datetime = datetime.now() + timedelta(days=days, hours=hours, minutes=minutes)
+    formatted_date = adjusted_datetime.strftime("%Y%m%d")
+    formatted_hour = adjusted_datetime.strftime("%H%M")
+    return formatted_date, formatted_hour
 
 int_to_weather = {
     "0": "맑음",
@@ -27,13 +25,13 @@ int_to_weather = {
     "7": "눈날림"
 }
 
-def forecast():
+def forecast(days=0, hours=0, minutes=0):
     params ={'serviceKey' : keys, 
         'pageNo' : '1', 
         'numOfRows' : '10', 
         'dataType' : 'XML', 
-        'base_date' : get_current_date(), 
-        'base_time' : get_current_hour(),
+        'base_date' : get_datetime(days, hours, minutes)[0], 
+        'base_time' : get_datetime(days, hours, minutes)[1],
         'nx' : '55', 
         'ny' : '127' }
     url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'
@@ -51,5 +49,3 @@ def forecast():
     sky = int_to_weather[sky]
     
     return temp , sky
-
-print(forecast())

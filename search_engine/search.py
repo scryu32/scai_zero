@@ -1,4 +1,4 @@
-#검색엔진 GOOGLE_SEARCH
+#검색엔진 getSearch(단어)로 쓸수있음
 import os
 import requests
 
