@@ -13,7 +13,17 @@ def fetch_assistant_response(messages):
         max_tokens=1600,
         top_p=1,
         frequency_penalty=0,
-        presence_penalty=0
+        presence_penalty=0,
+        stream=True
     )
-    return response.choices[0].message.content
+    full_content = ""
+    print("[챗봇]", end="", flush=True)
+    for chunk in response:
+        if chunk:
+            content = chunk.choices[0].delta.content
+            if content:
+                print(content, end='', flush=True)
+                full_content += content
+    print()
+    return response
 

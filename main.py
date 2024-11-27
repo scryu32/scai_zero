@@ -14,7 +14,6 @@ def use_chatbot():
         if search_response != 0:
             messages.append({"role": "system", "content": search_response})
         assistant_response = fetch_assistant_response(messages)
-        print(assistant_response)
         messages.append({"role": "assistant", "content": assistant_response})
 
 
